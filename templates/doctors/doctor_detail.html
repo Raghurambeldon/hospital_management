@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block title %}{{ doctor.name }} - Doctor Details{% endblock %}
+
+{% block content %}
+<section style="padding: 60px 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5;">
+
+    <div class="doctor-card">
+        <!-- Doctor Image -->
+        <div class="doctor-img">
+            <img src="{{ doctor.profile_image.url }}" alt="{{ doctor.name }}">
+        </div>
+
+        <!-- Doctor Info -->
+        <div class="doctor-info">
+            <h2>{{ doctor.name }}</h2>
+            <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+            <p><strong>Diseases Treated:</strong> {{ doctor.diseases.all|join:", " }}</p>
+            <p><strong>Rating:</strong> {{ doctor.rating }} ⭐</p>
+            {% if doctor.is_active %}
+                <span class="availability available">Available</span>
+            {% else %}
+                <span class="availability busy">Busy</span>
+            {% endif %}
+
+            <a href="{% url 'book_appointment' doctor.id %}" class="btn-appointment">📅 Book Appointment</a>
+        </div>
+    </div>
+</section>
+
+<!-- Styles -->
+<style>
+/* Card Container */
+.doctor-card {
+    background: linear-gradient(145deg, #ffffff, #e0f7fa);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    max-width: 500px;
+    text-align: center;
+    transform: translateY(50px);
+    opacity: 0;
+    animation: cardFadeIn 1s forwards;
+}
+
+/* Doctor Image */
+.doctor-img img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+.doctor-img img:hover {
+    transform: scale(1.1);
+}
+
+/* Info styling */
+.doctor-info h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+}
+.doctor-info p {
+    font-size: 16px;
+    margin: 6px 0;
+}
+
+/* Availability badges */
+.availability {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+}
+.available {
+    background-color: #4caf50;
+    color: white;
+}
+.busy {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Appointment button */
+.btn-appointment {
+    display: inline-block;
+    background-color: #ff9800;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    margin-top: 20px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.btn-appointment:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Fade-in animation for card */
+@keyframes cardFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scroll animation */
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.querySelector('.doctor-card');
+    function scrollAnimation() {
+        const triggerBottom = window.innerHeight * 0.9;
+        const cardTop = card.getBoundingClientRect().top;
+        if (cardTop < triggerBottom) {
+            card.style.opacity = 1;
+            card.style.transform = 'translateY(0)';
+        }
+    }
+    window.addEventListener('scroll', scrollAnimation);
+    scrollAnimation();
+});
+</script>
+{% endblock %}

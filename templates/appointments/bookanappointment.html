@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<section style="padding:50px 20px; max-width:700px; margin:auto;">
+
+    <h2 style="text-align:center; font-size:2rem; margin-bottom:30px; animation: fadeInDown 1s;">
+        Book Appointment with {{ doctor.name }}
+    </h2>
+
+    <div class="doctor-card-detail">
+        {% if doctor.profile_image %}
+            <img src="{{ doctor.profile_image.url }}" alt="{{ doctor.name }}" class="doctor-img-detail">
+        {% else %}
+            <img src="{% static 'images/doctors/default.png' %}" alt="{{ doctor.name }}" class="doctor-img-detail">
+        {% endif %}
+        <h3>{{ doctor.name }}</h3>
+        <p>Specialization: {{ doctor.specialization }}</p>
+        <p>Diseases treated: {{ doctor.diseases.all|join:", " }}</p>
+        <p>Rating: {{ doctor.rating }} ⭐</p>
+        {% if doctor.is_active %}
+            <span class="status available">Available</span>
+        {% else %}
+            <span class="status busy">Busy</span>
+        {% endif %}
+    </div>
+
+    <form method="post" style="margin-top:30px; animation: fadeInUp 1s;">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error" style="color:red;">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="margin-top:15px;">Book Now</button>
+    </form>
+
+</section>
+
+<style>
+/* Animations */
+@keyframes fadeInDown {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Doctor card detail */
+.doctor-card-detail {
+    text-align:center;
+    padding:20px;
+    background:#fff;
+    border-radius:15px;
+    box-shadow:0 8px 15px rgba(0,0,0,0.1);
+    margin-bottom:30px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.doctor-card-detail:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow:0 12px 20px rgba(0,0,0,0.15);
+}
+.doctor-img-detail {
+    width:180px;
+    height:180px;
+    object-fit:cover;
+    border-radius:50%;
+    margin-bottom:15px;
+}
+
+/* Status badges */
+.status {
+    padding:5px 10px;
+    border-radius:6px;
+    font-weight:500;
+    color:#fff;
+}
+.status.available { background-color: #28a745; }
+.status.busy { background-color: #dc3545; }
+
+/* Form styling */
+.form-group {
+    margin-bottom:15px;
+}
+.form-control {
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-control:focus {
+    border-color:#007bff;
+    box-shadow:0 0 5px rgba(0,123,255,0.5);
+}
+.btn-primary {
+    background:#007bff;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+.btn-primary:hover {
+    background:#0056b3;
+    transform: scale(1.05);
+}
+</style>
+{% endblock %}

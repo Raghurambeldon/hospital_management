@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Doctors{% endblock %}
+
+{% block content %}
+<section style="padding:50px 20px; max-width:1200px; margin:auto;">
+    <h2 style="text-align:center; font-size:2.5rem; margin-bottom:40px; animation: fadeInDown 1s;">
+        Meet Our Doctors
+    </h2>
+
+    <!-- Disease filter form -->
+    <form method="get" style="text-align:center; margin-bottom:40px;">
+        <select name="disease" class="form-input" 
+                style="padding:10px 15px; border-radius:8px; border:1px solid #ccc; transition:0.3s;">
+            <option value="">All Diseases</option>
+            {% for disease in diseases %}
+            <option value="{{ disease.id }}" {% if selected_disease == disease.id|stringformat:"s" %}selected{% endif %}>
+                {{ disease.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary" 
+                style="padding:10px 20px; margin-left:15px; border-radius:8px; cursor:pointer; transition:0.3s;">
+            Filter
+        </button>
+    </form>
+
+    <!-- Doctors grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:30px;">
+        {% for doctor in doctors %}
+        <a href="{% url 'doctor_detail' doctor.id %}" style="text-decoration:none; color:inherit;">
+            <div class="doctor-card">
+                {% if doctor.profile_image %}
+                    <img src="{{ doctor.profile_image.url }}" 
+                         alt="{{ doctor.name }}" class="doctor-img">
+                {% else %}
+                    <img src="{% static 'images/doctors/default.png' %}" 
+                         alt="{{ doctor.name }}" class="doctor-img">
+                {% endif %}
+                <h4>{{ doctor.name }}</h4>
+                <p class="specialization">{{ doctor.specialization }}</p>
+                <p class="diseases">Treats: {{ doctor.diseases.all|join:", " }}</p>
+                <p class="rating">Rating: {{ doctor.rating }} ⭐</p>
+                {% if doctor.is_active %}
+                    <span class="status available">Available</span>
+                {% else %}
+                    <span class="status busy">Busy</span>
+                {% endif %}
+            </div>
+        </a>
+        {% empty %}
+            <p style="grid-column:1/-1; text-align:center;">No doctors found.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<style>
+/* Animations */
+@keyframes fadeInDown {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Doctor card styling */
+.doctor-card {
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 6px 12px rgba(0,0,0,0.1);
+    background:#fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position:relative;
+}
+.doctor-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow:0 12px 20px rgba(0,0,0,0.15);
+}
+
+/* Image styling */
+.doctor-img {
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:12px;
+    margin-bottom:15px;
+    transition: transform 0.3s;
+}
+.doctor-card:hover .doctor-img {
+    transform: scale(1.05);
+}
+
+/* Text styling */
+.doctor-card h4 {
+    margin:10px 0 5px 0;
+    font-size:1.2rem;
+    color:#333;
+    font-weight:600;
+}
+.doctor-card .specialization {
+    font-weight:500;
+    color:#555;
+    margin-bottom:5px;
+}
+.doctor-card .diseases {
+    font-size:0.9rem;
+    color:#666;
+    margin-bottom:5px;
+}
+.doctor-card .rating {
+    font-size:0.9rem;
+    color:#444;
+    margin-bottom:10px;
+}
+
+/* Status badges */
+.status {
+    padding:5px 10px;
+    border-radius:6px;
+    font-weight:500;
+    color:#fff;
+}
+.status.available { background-color: #28a745; }
+.status.busy { background-color: #dc3545; }
+</style>
+{% endblock %}

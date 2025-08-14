@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Appointment Token</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .card { padding:20px; border:1px solid #333; border-radius:10px; max-width:600px; margin:auto; }
+        h2 { text-align:center; }
+        .section { margin-bottom:15px; }
+        .label { font-weight:bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>JanaSeva Hospital</h2>
+        <div class="section">
+            <span class="label">Token Number:</span> {{ appointment.token_number }}
+        </div>
+        <div class="section">
+            <span class="label">Patient Name:</span> {{ appointment.patient_name }}<br>
+            <span class="label">DOB:</span> {{ appointment.dob }}<br>
+            <span class="label">Age:</span> {{ appointment.age }}<br>
+            <span class="label">Blood Group:</span> {{ appointment.blood_group }}<br>
+            <span class="label">Address:</span> {{ appointment.address1 }} {{ appointment.address2 }}<br>
+            <span class="label">Nominee:</span> {{ appointment.nominee }}
+        </div>
+        <div class="section">
+            <span class="label">Doctor:</span> {{ appointment.doctor.name }}<br>
+            <span class="label">Specialization:</span> {{ appointment.doctor.specialization }}<br>
+            <span class="label">Diseases Treated:</span> {{ appointment.doctor.diseases.all|join:", " }}<br>
+            <span class="label">Date & Time:</span> {{ appointment.date }} at {{ appointment.time }}
+        </div>
+    </div>
+</body>
+</html>
